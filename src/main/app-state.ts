@@ -6,11 +6,14 @@ import path from "path";
 import { Tray, app, dialog } from "electron";
 import PrimaryWindow from "./windows/primary";
 import FramelessWindow from "./windows/frameless";
+import printWindow from "./windows/print";
+
 import log from "electron-log/main";
 import ElectronStore from "electron-store";
 import { Singleton } from "../lib/utils/shared";
 import fd from "../lib/file-download/main";
 import nl from "../lib/native/main";
+import print from "../lib/print/main";
 import utils from "../lib/utils/main";
 
 // 应用环境（开发环境、测试环境、生产环境）
@@ -76,6 +79,9 @@ class AppState extends Singleton{
     fd.initialize();
     log.info("FileDownload initialize ok");
     
+    //
+    print.initialize();
+
     // 初始化Utils组件
     utils.initialize();
     log.info("Utils initialize ok");
@@ -113,6 +119,10 @@ class AppState extends Singleton{
 
   // 无边框示例窗口的对象
   public framelessWindow : null | FramelessWindow = null;
+
+  // 打印窗口的对象
+  public printWindow : null | printWindow = null;
+
 
   // 系统托盘
   public tray: null | Tray = null;

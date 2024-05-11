@@ -21,6 +21,6 @@ contextBridge.exposeInMainWorld("primaryWindowAPI", {
   asyncExitApp: () => ipcRenderer.invoke("async-exit-app"),
   minToTray: () => ipcRenderer.send("min-to-tray"),
   httpGetRequest: (url:string) => ipcRenderer.send("http-get-request", url),
-
+  showPrintWindow: () => ipcRenderer.send("show-Print-Window"),
 
 });

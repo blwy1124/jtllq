@@ -3,6 +3,7 @@ import { app, dialog, ipcMain } from "electron";
 import appState from "../../app-state";
 import WindowBase from "../window-base";
 import FramelessWindow from "../frameless";
+import PrintWindow from "../print";
 import axiosInst from "../../../lib/axios-inst/main";
 import nl from "../../../lib/native/main";
 
@@ -127,6 +128,26 @@ class PrimaryWindow extends WindowBase{
             type: "error"
           });
         });
+    });
+
+    ipcMain.on("show-Print-Window", (event) => {
+      if(!appState.printWindow?.valid){
+        appState.printWindow = new PrintWindow();
+      }
+      
+      const win = appState.printWindow?.browserWindow;
+      if(win){
+        // 居中到父窗体中
+        const parent = win.getParentWindow();
+        if(parent){
+          const parentBounds = parent.getBounds();
+          const x = Math.round(parentBounds.x + (parentBounds.width - win.getSize()[0]) / 2);
+          const y = Math.round(parentBounds.y + (parentBounds.height - win.getSize()[1]) / 2);
+
+          win.setPosition(x, y, false);
+        }
+        win.show();
+      }
     });
   }
 }

@@ -31,6 +31,9 @@ class Utils{
     return (window as any).__ElectronUtils__.getAppVersion() as string;
   }
 
+  public openPrintPreview(){
+    return (window as any).__ElectronUtils__.openPrintPreview();
+  }
   // === FALG LINE (DO NOT MODIFY/REMOVE) ===
 }
 

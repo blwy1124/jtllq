@@ -47,6 +47,9 @@
             <a-button @click="onGotoWebview">
               webview
             </a-button>
+            <a-button @click="onShowPrintWindow">
+              打印窗口
+            </a-button>
           </a-space>
         </a-collapse-panel>
         <a-collapse-panel key="2" header="应用配置">
@@ -157,6 +160,8 @@ import * as fdTypes from "@file-download/shared";
 import utils from "@utils/renderer";
 import { GetErrorMessage } from "@utils/shared";
 
+import print from "@print/renderer";
+
 import { simpleDll } from "@native/renderer";
 
 import axiosInst from "@lib/axios-inst/renderer";
@@ -223,6 +228,11 @@ function onShowOtherEnv(){
 function onShowFramelessWindow(){
   // 通知主进程显示无边框示例窗口
   getElectronApi().showFramelessSampleWindow();
+}
+
+function onShowPrintWindow(){
+  // 通知主进程显示打印窗口
+  print.openPrintPreview();
 }
 
 function onOpenHomepage(){

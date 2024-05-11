@@ -28,6 +28,7 @@ export default defineConfig({
       "@native": path.join(__dirname, "../lib/native"),
       "@file-download": path.join(__dirname, "../lib/file-download"),
       "@utils": path.join(__dirname, "../lib/utils"),
+      "@print": path.join(__dirname, "../lib/print")
     },
   },
   plugins: [

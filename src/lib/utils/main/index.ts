@@ -61,6 +61,9 @@ ipcMain.on("electron-utils-get-app-version", (event) => {
   event.returnValue = appState.appVersion;
 });
 
+ipcMain.on("electron-utils-open-print-preview", (event) => {
+  
+});
 // === FALG LINE (DO NOT MODIFY/REMOVE) ===
 
 export default utils;

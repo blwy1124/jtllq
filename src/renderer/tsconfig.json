@@ -18,6 +18,7 @@
         "@native/*": ["../lib/native/*"],
         "@file-download/*": ["../lib/file-download/*"],
         "@utils/*": ["../lib/utils/*"],
+        "@print/*": ["../lib/print/*"]
       }
     },
     "include": ["./**/*.ts", "./**/*.d.ts", "./**/*.tsx", "./**/*.vue", "../lib/**/*.ts", "../lib/**/*.d.ts"]
