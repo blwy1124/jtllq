@@ -1,0 +1,10 @@
+node_modules
+dist
+build
+out
+
+.idea
+*.exe
+nsis-3.08/
+package-lock.json
+yarn.lock

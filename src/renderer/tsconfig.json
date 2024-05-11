@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+      "target": "esnext",
+      "jsx": "preserve",
+      "lib": ["esnext", "dom"],
+      "useDefineForClassFields": true,
+      "module": "esnext",
+      "moduleResolution": "node",
+      "resolveJsonModule": true,
+      "types": ["vite/client"],
+      "strict": true,
+      "sourceMap": true,
+      "esModuleInterop": true,
+      "paths": {
+        "@views/*": ["./views/*"],
+        "@components/*": ["./components/*"],
+        "@lib/*": ["../lib/*"],
+        "@native/*": ["../lib/native/*"],
+        "@file-download/*": ["../lib/file-download/*"],
+        "@utils/*": ["../lib/utils/*"],
+      }
+    },
+    "include": ["./**/*.ts", "./**/*.d.ts", "./**/*.tsx", "./**/*.vue", "../lib/**/*.ts", "../lib/**/*.d.ts"]
+  }
