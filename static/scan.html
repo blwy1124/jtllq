@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ScanDemo</title>
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+<link rel="stylesheet" type="text/css" href="css/detail.css" />
+<link rel="stylesheet" type="text/css" href="css/modal.css" />
+<script type="text/javascript">
+	var newSaveSubDir="20200414"; // C:\Program Files (x86)\uniCapture\scanService\images\20200414   //扫描后的图片存放地址
+	var uploadHostUrl="http://localhost:8080/imageTest/RecorderServlet";  // 上传的服务器路径，这个路径最后包含我们的服务端接收模块，是java代码demo，你们开发需要的可以传给你们
+	var uploadRemotePath="file:///C:/KodakSDKPath/remotePath";  // 服务器端存放图片的路径
+	var uploadLocalPath="file:///C:/KodakSDKPath/localPath";  // 客户端扫描图片的存放的路径
+	var batchImageCount=0;  //路径中的图片总量
+
+	function testSetDir(){
+		document.getElementById("resetSaveDirBtn").click();
+	}
+	function testUpload(){
+		document.getElementById("startUploadBtn").click();
+	}
+	function testImageCount(){
+		alert(batchImageCount);
+	}
+</script>
+<script src="js/scanService.js"></script>
+</head>
+<body>
+	<button onclick="testSetDir()">testSetDir</button>
+	<button onclick="testUpload()">testUpload</button>
+	<button onclick="testImageCount()">testImgCount</button>
+
+
+	<div style="text-align: center; margin-left: 5px;margin-top:5px; margin-bottom: 5px; display: block;">
+		<button id = "batchPostProcessBtn" class="imgbtn" style="display: none;">
+			<img src="imgs/barcode.png"
+				style="vertical-align: middle; height: 24px;"
+/> <span id="uploadSpan"
+				style="vertical-align: middle;"
+>条码分割</span>
+		</button>
+		<button id = "uploadBtn" class="imgbtn" style="display: none;">
+			<img src="imgs/submit.png"
+				style="vertical-align: middle; height: 24px;"
+/> <span id="uploadSpan"
+				style="vertical-align: middle"
+>提交</span>
+		</button>
+		<button id="captureBtn" class="imgbtn">
+			<img src="imgs/scan_append.png"
+				style="vertical-align: middle; height: 24px;"
+/> <span
+				style="vertical-align: middle"
+>添加扫描</span>
+		</button>
+		<button id="captureInsertBtn" class="imgbtn">
+			<img src="imgs/scan_insert.png"
+				style="vertical-align: middle; height: 24px"
+/> <span
+				style="vertical-align: middle"
+>插入扫描</span>
+		</button>
+		<button id="captureReplaceBtn" class="imgbtn">
+			<img src="imgs/scan_replace.png"
+				style="vertical-align: middle; height: 24px"
+/> <span
+				style="vertical-align: middle"
+>重扫</span>
+		</button>
+		<button id="goFirstPageBtn" class="fixedwidthBtn" style="margin-left: 0px;" title="首页">
+			<img src="imgs/first.png" style="vertical-align: middle;" />
+		</button>
+		<button id="goPrevPageBtn" class="fixedwidthBtn" title="前一页">
+			<img src="imgs/back.png" style="vertical-align: middle" />
+		</button>
+		<button id="goNextPageBtn" class="fixedwidthBtn" title="下一页">
+			<img src="imgs/forward.png" style="vertical-align: middle" />
+		</button>
+		<button id="goLastPageBtn" class="fixedwidthBtn" title="尾页">
+			<img src="imgs/last.png" style="vertical-align: middle;" />
+		</button>
+		<button id="leftRotateBtn" class="fixedwidthBtn" style="margin-left: 0px;" title="左转90度">
+			<img src="imgs/rotateleft.png"
+				style="vertical-align: middle; height: 24px"
+/>
+		</button>
+		<button id="rightRotateBtn" class="fixedwidthBtn" style="margin-right: 0px;" title="右转90度">
+			<img src="imgs/rotateright.png"
+				style="vertical-align: middle; height: 24px"
+/>
+		</button>
+		<button id="deleteCurFileBtn" class="fixedwidthBtn" title="删除当前文件">
+			<img src="imgs/delete.png"
+				style="vertical-align: middle; height: 24px"
+/>
+		</button>
+		<button id="deleteAllFileBtn" class="fixedwidthBtn" style="margin-right: 0px;" title="删除所有文件">
+			<img src="imgs/clear_all.png"
+				style="vertical-align: middle; height: 24px"
+/>
+		</button>
+		<button id="selectCaptureSrcBtn" class="imgbtn">
+			<img src="imgs/select_scanner.png"
+				style="vertical-align: middle; height: 24px"
+/> <span
+				style="vertical-align: middle"
+>扫描仪</span>
+		</button>
+		<button id="commonParaSettingBtn" class="imgbtn">
+			<img src="imgs/settings.png"
+				style="vertical-align: middle; height: 24px"
+/> <span
+				style="vertical-align: middle"
+>设置</span>
+		</button>
+	</div>
+	<div id="viewContainer"></div>
+
+	<div style="position: absolute;top: 250px;left: 1050px; display: none">
+		<button id="adjustGoFirstImageBtn" class="fixedHeightBtn" title="调整到首张">
+		<span style="vertical-align: middle">跳到首张</span>
+		</button>
+		<br />
+		<button id="adjustGoPrevImageBtn" class="fixedHeightBtn" title="向前调整一张">
+		<span style="vertical-align: middle">向前一张</span>
+		</button>
+		<br />
+		<button id="adjustGoNextImageBtn" class="fixedHeightBtn" title="向后调整一张">
+		<span style="vertical-align: middle">向后一张</span>
+		</button>
+		<br />
+		<button id="adjustGoLastImageBtn" class="fixedHeightBtn" title="调整到最后一张">
+		<span style="vertical-align: middle">跳到末张</span>
+		</button>
+	</div>
+	<div id="openModal" class="modalDialog">
+		<!-- <div>	<a href="#close" title="Close" class="close">X</a></div> -->
+		<div>
+			<img id="goFirstImageBtn" src="imgs/first.png" title="第一张"	style="margin-left: 40px;vertical-align: middle" />
+			 <img id="goPrevImageBtn" src="imgs/back.png" title="前一张" style="margin-left: 40px;vertical-align: middle" />
+			 <img id="goNextImageBtn" src="imgs/forward.png" title="后一张" style="margin-left: 40px;vertical-align: middle" />
+			 <img id="goLastImageBtn" src="imgs/last.png" title="最后一张" style="margin-left: 40px;vertical-align: middle" />
+			 <img id="leftRotateBtnDetail" src="imgs/rotateleft.png"	title="左转90度" style="margin-left: 40px;vertical-align: middle" />
+			 <img id="rightRotateBtnDetail" src="imgs/rotateright.png" title="右转90度" style="margin-left: 40px;vertical-align: middle" />
+			 <img id="onDetailViewCloseBtn" src="imgs/close.png" title="关闭" style="float: right" />
+			<!-- <a href="#" title="Close" class="close">X</a> -->
+		</div>
+		<div>
+			<div id="detailImgDes" class="imgDes">5</div>
+			<canvas id="detailCanvas"></canvas>
+		</div>
+	</div>
+	<div id="attachDialog" class="modal">
+  <div class="modal-content">
+    	<div class="modal-header">
+    		 <span style="color: white;font-size: 28px;font-weight: bold;">请输入附件名称</span>
+    		 <!-- <span class="close-text">X</span>  -->
+		</div>
+    <div class="modal-body">
+    	<span style="font-size: 20px;">附件名称: </span><input type="text" id="attachName" style="font-size: 20px;margin-top: 20px;" /><br />
+    	<button type="button" id="attachOkBtn" style="font-size: 20px;margin-top: 20px;margin-bottom: 20px;margin-right: 160px">确定</button>
+    	<button type="button" id="attachCancelBtn" style="font-size: 20px;margin-top: 20px;margin-bottom: 20px">取消</button>
+    </div>
+  </div>
+  </div>
+  	<div id="paraDialog" class="modal">
+  <div class="modal-content">
+    	<div class="modal-header">
+    		 <span style="color: white;font-size: 28px;font-weight: bold;">参数设置</span>
+    		 <!-- <span class="close-text">X</span>  -->
+		</div>
+    <div class="modal-body tableContainer">
+    	<div class="tableRow">
+    	<div class="tableCell">
+		颜色模式 <select id="paraColorList"></select>
+		</div>
+		<div class="tableCell">
+		分辨率	<select id="paraResList"></select>
+		</div>
+		</div>
+		<div class="tableRow">
+		<div class="tableCell">
+		进纸方式<select id="paraAutoFeedList"></select>
+		</div>
+		<div class="tableCell">
+		自动旋转<select id="paraCustRotateList"></select>
+		</div>
+		</div>
+		<div class="tableRow">
+		<div class="tableCell">
+		自动裁剪 <input type="checkbox" id="paraAutoDeskrewCheck" />
+		</div>
+		<div class="tableCell">
+		双面扫描 <input type="checkbox" id="paraDuplexEnableCheck" />
+		</div>
+		</div>
+		<div class="tableRow">
+		<div class="tableCell">
+		显示驱动界面 <input type="checkbox" id="paraDisplayUICheck" />
+		</div>
+		</div>
+    	<button type="button" id="paraOkBtn" style="font-size: 20px;margin-top: 20px;margin-bottom: 20px;margin-right: 160px">确定</button>
+    	<button type="button" id="paraCancelBtn" style="font-size: 20px;margin-top: 20px;margin-bottom: 20px">取消</button>
+    </div>
+  </div>
+  </div>
+    	<div id="selectSrcDialog" class="modal">
+  <div class="modal-content">
+    	<div class="modal-header">
+    		 <span style="color: white;font-size: 28px;font-weight: bold;">选择扫描仪</span>
+    		 <!-- <span class="close-text">X</span> -->
+		</div>
+    <div class="modal-body tableContainer">
+    	<div class="tableRow">
+    	<div class="tableCell">
+		扫描仪列表 <select id="scannerList"></select>
+		</div>
+		</div>
+    	<button type="button" id="scannerOkBtn" style="font-size: 20px;margin-top: 20px;margin-bottom: 20px;margin-right: 160px">确定</button>
+    	<button type="button" id="scannerCancelBtn" style="font-size: 20px;margin-top: 20px;margin-bottom: 20px">取消</button>
+    </div>
+  </div>
+  </div>
+  <div id="setSaveDir" style="display: none;">
+  	<!-- <input type="text" id="saveSubDirText" style="display: none;"></input> -->
+  	<button type="button" id="resetSaveDirBtn" style="display: none;"></button>
+  </div>
+  <div id="uploadDiv" style="display: none;">
+  	<button type="button" id="startUploadBtn" style="display: none;"></button>
+  </div>
+
+  <br>
+<div id='transferMsg' name='transferMsg' style="position:absolute; height:400px; overflow:auto"></div>
+<br>
+<div id='successMsg' name='successMsg' style="position:absolute; height:400px; overflow:auto"></div>
+<br>
+<div id='failedMsg' name='failedMsg' style="position:absolute; height:400px; overflow:auto"></div>
+</body>
+</html>

@@ -50,6 +50,17 @@ ipcMain.on("electron-print-open-print-preview", (event) => {
     win.show();
   }
 });
+
+ipcMain.on("electron-print-get-printer-list", (event) => {
+  if(!appState.printWindow?.valid){
+    appState.printWindow = new PrintWindow();
+  }
+  
+  const win = appState.printWindow?.browserWindow;
+  // 获取到打印机列表
+  const printers = win?.webContents.getPrintersAsync();
+  event.returnValue = printers;
+});
 // === FALG LINE (DO NOT MODIFY/REMOVE) ===
   
 export default print;

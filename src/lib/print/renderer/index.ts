@@ -10,6 +10,9 @@ class Print{
   public openPrintPreview(){
     return (window as any).__PrintUtils__.openPrintPreview();
   }
+  public getPrinterList(){
+    return (window as any).__PrintUtils__.getPrinterList();
+  }
 }
   
 const print = new Print();

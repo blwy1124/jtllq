@@ -232,7 +232,8 @@ function onShowFramelessWindow(){
 
 function onShowPrintWindow(){
   // 通知主进程显示打印窗口
-  print.openPrintPreview();
+  // print.openPrintPreview();
+  getElectronApi().showPrintWindow();
 }
 
 function onOpenHomepage(){

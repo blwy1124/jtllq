@@ -79,8 +79,9 @@ class AppState extends Singleton{
     fd.initialize();
     log.info("FileDownload initialize ok");
     
-    //
+    // 初始化Print打印组件
     print.initialize();
+    log.info("Utils initialize ok");
 
     // 初始化Utils组件
     utils.initialize();

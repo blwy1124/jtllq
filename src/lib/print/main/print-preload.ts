@@ -9,6 +9,7 @@ function initialize(){
     try {
       contextBridge.exposeInMainWorld("__ElectronPrintUtils__", {
         openPrintPreview: () => ipcRenderer.send("electron-print-open-print-preview"),
+        getPrinterList: () => ipcRenderer.send("electron-print-get-printer-list"),
         
       });
     } catch {

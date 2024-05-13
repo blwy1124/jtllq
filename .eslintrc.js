@@ -20,6 +20,9 @@ module.exports = {
     "plugin:@typescript-eslint/recommended",
     "plugin:vue/vue3-recommended",
   ],
+  globals: {
+    __static: true
+  },
   rules: {
     // override/add rules settings here, such as:
     "max-len": ["error", {code: 300}],
