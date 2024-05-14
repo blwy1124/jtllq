@@ -1,5 +1,5 @@
 <template>
-  <!-- <div class="titlebar">
+  <div class="titlebar">
     <span class="title">无边框示例窗口</span>
     <div class="buttons">
       <div class="button" @click="onMinimizeWindow">
@@ -12,10 +12,13 @@
         <font-awesome-icon icon="fa-solid fa-xmark" color="#9d9d9d" />
       </div>
     </div>
-  </div> -->
+  </div>
   <div class="contents">
     <a-button @click="onOpenDevTools">
       Open DevTools
+    </a-button>
+    <a-button @click="onShowPrint">
+      打印预览
     </a-button>
   </div>
 </template>
@@ -25,7 +28,7 @@ import utils from "@utils/renderer";
   
 function getElectronApi(){
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (window as any).printPreviewWindowAPI;
+  return (window as any).printWindowAPI;
 }
   
 function onMinimizeWindow(){
@@ -44,9 +47,12 @@ function onOpenDevTools(){
   utils.openDevTools();
 }
 
+function onShowPrint(){
+  getElectronApi().showPrintPreviewWindow();
+}
 </script>
   
-  <style>
+  <style scoped>
   
   .titlebar {
     -webkit-app-region: drag;

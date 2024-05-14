@@ -5,7 +5,7 @@ import { app, session, BrowserWindow, ipcMain, shell, dialog, OpenDialogOptions 
 import path from "path";
 import * as PrintUtil from "./print-util";
 import appState from "../../../main/app-state";
-import PrintWindow from "../../../main/windows/print";
+// import PrintWindow from "../../../main/windows/printPreview";
 
 
 class Print{
@@ -33,7 +33,7 @@ const print = new Print();
   
 ipcMain.on("electron-print-open-print-preview", (event) => {
   if(!appState.printWindow?.valid){
-    appState.printWindow = new PrintWindow();
+    // appState.printWindow = new PrintWindow();
   }
   
   const win = appState.printWindow?.browserWindow;
@@ -53,7 +53,7 @@ ipcMain.on("electron-print-open-print-preview", (event) => {
 
 ipcMain.on("electron-print-get-printer-list", (event) => {
   if(!appState.printWindow?.valid){
-    appState.printWindow = new PrintWindow();
+    // appState.printWindow = new PrintWindow();
   }
   
   const win = appState.printWindow?.browserWindow;

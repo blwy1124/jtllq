@@ -2,9 +2,8 @@ import path from "path";
 import { BrowserWindow, ipcMain } from "electron";
 import WindowBase from "../window-base";
 import appState from "../../app-state";
-import PrintPreviewWindow from "../printPreview";
 
-class PrintWindow extends WindowBase{
+class PrintPreviewWindow extends WindowBase{
   constructor(){
     // 调用WindowBase构造函数创建窗口
     super({
@@ -20,7 +19,7 @@ class PrintWindow extends WindowBase{
       parent: appState.primaryWindow?.browserWindow as BrowserWindow,
     });
 
-    this.openRouter("/print");
+    this.openRouter("/printPreview");
   }
 
   protected registerIpcMainHandler(): void{  
@@ -40,27 +39,7 @@ class PrintWindow extends WindowBase{
     ipcMain.on("close-window", (event) => {
       this.browserWindow?.close();
     });
-
-    ipcMain.on("show-print-preview-window", (event) => {
-      if(!appState.printPreviewWindow?.valid){
-        appState.printPreviewWindow = new PrintPreviewWindow();
-      }
-      
-      const win = appState.printPreviewWindow?.browserWindow;
-      if(win){
-        // 居中到父窗体中
-        const parent = win.getParentWindow();
-        if(parent){
-          const parentBounds = parent.getBounds();
-          const x = Math.round(parentBounds.x + (parentBounds.width - win.getSize()[0]) / 2);
-          const y = Math.round(parentBounds.y + (parentBounds.height - win.getSize()[1]) / 2);
-
-          win.setPosition(x, y, false);
-        }
-        win.show();
-      }
-    });
   }
 }
 
-export default PrintWindow;
+export default PrintPreviewWindow;

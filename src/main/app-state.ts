@@ -7,6 +7,7 @@ import { Tray, app, dialog } from "electron";
 import PrimaryWindow from "./windows/primary";
 import FramelessWindow from "./windows/frameless";
 import printWindow from "./windows/print";
+import printPreviewWindow from "./windows/printPreview";
 
 import log from "electron-log/main";
 import ElectronStore from "electron-store";
@@ -124,6 +125,8 @@ class AppState extends Singleton{
   // 打印窗口的对象
   public printWindow : null | printWindow = null;
 
+  // 打印窗口渲染的对象
+  public printPreviewWindow : null | printPreviewWindow = null;
 
   // 系统托盘
   public tray: null | Tray = null;

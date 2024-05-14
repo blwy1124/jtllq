@@ -130,7 +130,8 @@ class PrimaryWindow extends WindowBase{
         });
     });
 
-    ipcMain.on("show-Print-Window", (event) => {
+    // 打开打印按钮窗口
+    ipcMain.on("show-print-Window", (event) => {
       if(!appState.printWindow?.valid){
         appState.printWindow = new PrintWindow();
       }

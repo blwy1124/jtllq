@@ -230,10 +230,9 @@ function onShowFramelessWindow(){
   getElectronApi().showFramelessSampleWindow();
 }
 
-function onShowPrintWindow(){
+async function onShowPrintWindow(){
   // 通知主进程显示打印窗口
-  // print.openPrintPreview();
-  getElectronApi().showPrintWindow();
+  await getElectronApi().showPrintWindow();
 }
 
 function onOpenHomepage(){

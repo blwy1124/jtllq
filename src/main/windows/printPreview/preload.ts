@@ -1,11 +1,10 @@
 import { contextBridge, ipcRenderer } from "electron";
 
 /*
-暴露print窗口主进程的方法到print窗口的渲染进程
+暴露printPreview窗口主进程的方法到printPreview窗口的渲染进程
 */
-contextBridge.exposeInMainWorld("printWindowAPI", {
+contextBridge.exposeInMainWorld("printPreviewWindowAPI", {
   minimizeWindow: () => ipcRenderer.send("minimize-window"),
   restoreWindow: () => ipcRenderer.send("restore-window"),
   closeWindow: () => ipcRenderer.send("close-window"),
-  showPrintPreviewWindow: () => ipcRenderer.send("show-print-preview-window"),
 });
