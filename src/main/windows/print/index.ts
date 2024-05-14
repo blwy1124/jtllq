@@ -60,6 +60,16 @@ class PrintWindow extends WindowBase{
         win.show();
       }
     });
+
+    ipcMain.on("print-test",(event) => {
+      
+      let list = this.browserWindow?.webContents.getPrintersAsync();
+      console.log(this.browserWindow?.webContents.getPrintersAsync());
+      this.browserWindow?.webContents.print(
+        {silent: true,
+        deviceName: "导出为WPS PDF"})
+      
+    });
   }
 }
 

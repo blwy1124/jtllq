@@ -34,6 +34,15 @@ abstract class WindowBase{
     }
   }
 
+  public openNetworkRouter(routerPath : string){
+
+    console.log(`Load URL: ${routerPath}`);
+
+    if(this._browserWindow){
+      this._browserWindow.loadURL(routerPath);
+    }
+  }
+
   public get valid(){
     return this.browserWindow != null;
   }

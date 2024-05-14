@@ -7,4 +7,6 @@ contextBridge.exposeInMainWorld("printPreviewWindowAPI", {
   minimizeWindow: () => ipcRenderer.send("minimize-window"),
   restoreWindow: () => ipcRenderer.send("restore-window"),
   closeWindow: () => ipcRenderer.send("close-window"),
+  print: () => ipcRenderer.send("print-window"),
+  destroyPrintPreviewWindownt: () => ipcRenderer.send("print-print-preview-window"),
 });

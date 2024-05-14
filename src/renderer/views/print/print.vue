@@ -20,6 +20,9 @@
     <a-button @click="onShowPrint">
       打印预览
     </a-button>
+    <a-button @click="printTest">
+      直接打印
+    </a-button>
   </div>
 </template>
   
@@ -49,6 +52,10 @@ function onOpenDevTools(){
 
 function onShowPrint(){
   getElectronApi().showPrintPreviewWindow();
+}
+
+function printTest(){
+  getElectronApi().printTest();
 }
 </script>
   

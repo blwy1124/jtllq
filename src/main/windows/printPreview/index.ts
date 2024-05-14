@@ -7,13 +7,18 @@ class PrintPreviewWindow extends WindowBase{
   constructor(){
     // 调用WindowBase构造函数创建窗口
     super({
-      width: 600,
-      height: 360,
-      fullscreen: false,
-      fullscreenable: true,
-      frame: false,
+      height: 595,
+  useContentSize: true,
+  width: 1140,
+  autoHideMenuBar: true,
+  minWidth: 842,
+  frame: true,
+  show: false,
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),
+        contextIsolation: true,
+        nodeIntegration: true,
+        webSecurity: false,
       },
       // 设置父窗口
       parent: appState.primaryWindow?.browserWindow as BrowserWindow,
@@ -38,6 +43,15 @@ class PrintPreviewWindow extends WindowBase{
   
     ipcMain.on("close-window", (event) => {
       this.browserWindow?.close();
+    });
+
+    ipcMain.on("print-window", (event,data) => {
+      console.log(data);
+      this.browserWindow?.webContents.print(data);
+    });
+
+    ipcMain.on("print-print-preview-window", (event) => {
+      this.browserWindow?.destroy();
     });
   }
 }

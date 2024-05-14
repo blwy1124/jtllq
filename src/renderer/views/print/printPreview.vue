@@ -22,6 +22,8 @@
   
 <script setup lang="ts">
 import utils from "@utils/renderer";
+import { ipcRenderer } from "electron";
+import { onMounted } from "vue";
   
 function getElectronApi(){
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -43,6 +45,18 @@ function onCloseWindow(){
 function onOpenDevTools(){
   utils.openDevTools();
 }
+ onMounted(async () => {
+    const windowTitle = window.document.querySelector(".window-title ");
+    windowTitle && windowTitle.remove(); // 删除顶部标题关闭按钮
+    // await getDataApi(id); // 获取数据
+    try{
+      await getElectronApi().print({silent: false,margins: { marginType: "none" },}); 
+    }catch (error) {
+      console.log(error)
+    } finally {
+      await getElectronApi().destroyPrintWindow();// 打印完成销毁新窗口
+    }  
+  });
 
 </script>
   
