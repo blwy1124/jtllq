@@ -10,9 +10,7 @@ class PrintWindow extends WindowBase{
     super({
       width: 600,
       height: 360,
-      fullscreen: false,
-      fullscreenable: true,
-      frame: false,
+    
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),
       },
@@ -61,14 +59,17 @@ class PrintWindow extends WindowBase{
       }
     });
 
-    ipcMain.on("print-test",(event) => {
-      
-      let list = this.browserWindow?.webContents.getPrintersAsync();
-      console.log(this.browserWindow?.webContents.getPrintersAsync());
+    ipcMain.on("print-test", (event) => {
+      // 测试
       this.browserWindow?.webContents.print(
-        {silent: true,
-        deviceName: "导出为WPS PDF"})
-      
+        { silent: true,
+          deviceName: "导出为WPS PDF" });
+    });
+
+    ipcMain.handle("get-printers", async(event) => {
+      // 测试
+      const list = await this.browserWindow?.webContents.getPrintersAsync();
+      return list;
     });
   }
 }

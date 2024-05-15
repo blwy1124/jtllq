@@ -1,30 +1,27 @@
 <template>
-  <!-- <div class="titlebar">
-    <span class="title">无边框示例窗口</span>
-    <div class="buttons">
-      <div class="button" @click="onMinimizeWindow">
-        <font-awesome-icon icon="fa-solid fa-minus" color="#9d9d9d" />
-      </div>
-      <div class="button" @click="onRestoreWindow">
-        <font-awesome-icon icon="fa-solid fa-window-restore" color="#9d9d9d" />
-      </div>
-      <div class="button" @click="onCloseWindow">
-        <font-awesome-icon icon="fa-solid fa-xmark" color="#9d9d9d" />
-      </div>
-    </div>
-  </div> -->
   <div class="contents">
     <a-button @click="onOpenDevTools">
       Open DevTools
     </a-button>
+    <a-button @click="getPrinters">
+      getPrinters
+    </a-button>
+    <p>选择打印机</p>
+    <select>
+      <option />
+      <div v-for="(printer, index) in printerList" :key="index" :value="printer">
+        {{ printer }}
+      </div>
+    </select>
   </div>
 </template>
   
 <script setup lang="ts">
 import utils from "@utils/renderer";
-import { ipcRenderer } from "electron";
-import { onMounted } from "vue";
-  
+import { ipcRenderer, WebContentsPrintOptions } from "electron";
+import log from "electron-log/renderer";
+import { onBeforeUnmount, onMounted } from "vue";
+let printerList: Array<string>[] = [];
 function getElectronApi(){
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (window as any).printPreviewWindowAPI;
@@ -45,19 +42,38 @@ function onCloseWindow(){
 function onOpenDevTools(){
   utils.openDevTools();
 }
- onMounted(async () => {
-    const windowTitle = window.document.querySelector(".window-title ");
-    windowTitle && windowTitle.remove(); // 删除顶部标题关闭按钮
-    // await getDataApi(id); // 获取数据
-    try{
-      await getElectronApi().print({silent: false,margins: { marginType: "none" },}); 
-    }catch (error) {
-      console.log(error)
-    } finally {
-      await getElectronApi().destroyPrintWindow();// 打印完成销毁新窗口
-    }  
+async function getPrinters(){
+  let list = await getElectronApi().getPrinters();
+  log.info(list);
+  list.forEach((item: { name: string[]; }) => {
+    printerList.push(item.name);
   });
+}
 
+function printWindow(){
+  const windowTitle = window.document.querySelector(".window-title");
+  windowTitle && windowTitle.remove(); // 删除顶部标题关闭按钮
+  try {
+    getElectronApi().print({ silent: true, deviceName: "导出为WPS PDF", margins: { marginType: "none" }, }); 
+  } catch (error){
+    console.log(error);
+  } finally {
+    // getElectronApi().destroyPrintPreviewWindow();// 打印完成销毁新窗口
+  // eslint-disable-next-line no-irregular-whitespace
+  }  
+}
+
+function removeListener(){
+  getElectronApi().removeListener();
+}
+
+onMounted(async() => {
+  await getPrinters();
+  printWindow();
+});
+onBeforeUnmount(() => {  
+  removeListener();  
+}); 
 </script>
   
   <style>

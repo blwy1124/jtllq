@@ -22,6 +22,7 @@
   
 <script setup lang="ts">
 import utils from "@utils/renderer";
+import log from "electron-log/renderer";
   
 function getElectronApi(){
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

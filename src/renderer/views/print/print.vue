@@ -1,6 +1,6 @@
 <template>
-  <div class="titlebar">
-    <span class="title">无边框示例窗口</span>
+  <!-- <div class="titlebar">
+    <span class="title">打印测试窗口</span>
     <div class="buttons">
       <div class="button" @click="onMinimizeWindow">
         <font-awesome-icon icon="fa-solid fa-minus" color="#9d9d9d" />
@@ -12,7 +12,7 @@
         <font-awesome-icon icon="fa-solid fa-xmark" color="#9d9d9d" />
       </div>
     </div>
-  </div>
+  </div> -->
   <div class="contents">
     <a-button @click="onOpenDevTools">
       Open DevTools
@@ -23,12 +23,15 @@
     <a-button @click="printTest">
       直接打印
     </a-button>
+    <a-button @click="getPrinters">
+      获取打印机列表
+    </a-button>
   </div>
 </template>
   
 <script setup lang="ts">
 import utils from "@utils/renderer";
-  
+import log from "electron-log/renderer";
 function getElectronApi(){
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (window as any).printWindowAPI;
@@ -50,17 +53,20 @@ function onOpenDevTools(){
   utils.openDevTools();
 }
 
+async function getPrinters(){
+  log.info(await getElectronApi().getPrinters());
+}
 function onShowPrint(){
   getElectronApi().showPrintPreviewWindow();
 }
-
+// 直接打印测试
 function printTest(){
   getElectronApi().printTest();
 }
 </script>
   
   <style scoped>
-  
+
   .titlebar {
     -webkit-app-region: drag;
     height: 36px;

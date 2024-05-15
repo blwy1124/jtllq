@@ -1,5 +1,6 @@
+/* eslint-disable space-before-function-paren */
 import path from "path";
-import { BrowserWindow, ipcMain } from "electron";
+import { BrowserWindow, WebContentsPrintOptions, ipcMain } from "electron";
 import WindowBase from "../window-base";
 import appState from "../../app-state";
 
@@ -8,24 +9,26 @@ class PrintPreviewWindow extends WindowBase{
     // 调用WindowBase构造函数创建窗口
     super({
       height: 595,
-  useContentSize: true,
-  width: 1140,
-  autoHideMenuBar: true,
-  minWidth: 842,
-  frame: true,
-  show: false,
+      useContentSize: true,
+      width: 1140,
+      autoHideMenuBar: true,
+      minWidth: 842,
+      frame: true,
+      show: false,
       webPreferences: {
         preload: path.join(__dirname, "preload.js"),
         contextIsolation: true,
-        nodeIntegration: true,
-        webSecurity: false,
+        nodeIntegration: true,
+        webSecurity: false,
       },
       // 设置父窗口
       parent: appState.primaryWindow?.browserWindow as BrowserWindow,
     });
 
     this.openRouter("/printPreview");
+    // this.openNetworkRouter("http://www.baidu.com");
   }
+
 
   protected registerIpcMainHandler(): void{  
     ipcMain.on("minimize-window", (event) => {
@@ -45,13 +48,26 @@ class PrintPreviewWindow extends WindowBase{
       this.browserWindow?.close();
     });
 
-    ipcMain.on("print-window", (event,data) => {
-      console.log(data);
-      this.browserWindow?.webContents.print(data);
+    ipcMain.handleOnce("print-get-printers", async (event) => {
+      const list = await this.browserWindow?.webContents.getPrintersAsync();
+      console.log("getPrintersAsync:" + list);
+      return list;
     });
 
-    ipcMain.on("print-print-preview-window", (event) => {
+    ipcMain.on("print-window", (event, options: WebContentsPrintOptions) => {
+      console.log(options);
+      event.sender.print(
+        options,
+        (success: boolean, failureReason: string) => {
+          console.log(success + ">" + failureReason);
+        });
+    });
+
+    ipcMain.on("print-destroy-preview-window", (event) => {
       this.browserWindow?.destroy();
+    });
+    ipcMain.on("remove-listener", (event) => {
+      // event.sender.removeListener(event,);
     });
   }
 }
