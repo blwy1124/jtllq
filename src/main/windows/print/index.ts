@@ -3,6 +3,7 @@ import { BrowserWindow, ipcMain } from "electron";
 import WindowBase from "../window-base";
 import appState from "../../app-state";
 import PrintPreviewWindow from "../printPreview";
+import SlientPrintWindow from "../slientPrint";
 
 class PrintWindow extends WindowBase{
   constructor(){
@@ -66,10 +67,20 @@ class PrintWindow extends WindowBase{
           deviceName: "导出为WPS PDF" });
     });
 
-    ipcMain.handle("get-printers", async(event) => {
+    ipcMain.on("get-printer-list", async(event) => {
+      const list = await event.sender.getPrintersAsync();
+      console.log(list);
+      event.returnValue = list;
+    });
+
+    ipcMain.on("slient-Print", (event) => {
       // 测试
-      const list = await this.browserWindow?.webContents.getPrintersAsync();
-      return list;
+      if(!appState.slientPrintWindow?.valid){
+        appState.slientPrintWindow = new SlientPrintWindow();
+      }
+      const win = appState.slientPrintWindow?.browserWindow;
+      win?.webContents.openDevTools();
+      win?.show();
     });
   }
 }

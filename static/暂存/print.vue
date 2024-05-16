@@ -23,22 +23,38 @@
     <a-button @click="printTest">
       直接打印
     </a-button>
-    <a-button @click="getPrinterList">
+    <a-button @click="getPrinters">
       获取打印机列表
     </a-button>
-    <a-button @click="slientPrint">
-      静默打印
+    <a-button @click="fetchHTML">
+      获取网页内容
     </a-button>
   </div>
+  <div v-if="prehtml" v-html="prehtml" />
 </template>
   
 <script setup lang="ts">
 import utils from "@utils/renderer";
-import { ipcRenderer } from "electron";
 import log from "electron-log/renderer";
+import axios from "axios";
+import { ref } from "vue";
+const prehtml = ref<string>("");
 function getElectronApi(){
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (window as any).printWindowAPI;
+}
+
+async function fetchHTML(){
+  // const url = "https://www.runoob.com/html/html-tutorial.html"; // 替换为你想获取内容的网址
+  // try {
+  //   const response = await axios.get(url);
+  //   prehtml.value = response.data; // 将网页内容赋值给 html 变量
+  // } catch (error){
+  //   console.error("获取网页内容失败:", error);
+  // }
+  // eslint-disable-next-line max-len
+  prehtml.value = '<html lang="en"><head><meta charset="UTF-8"><style>div{margin: 10px;}</style><title>PDF print demo</title></head><body style="background-color: white"><div><button id="print">打印HTML内容</button></div><div><label for="story" style="display: block;">请输入要打印的html:</label><textarea id="story" name="story" rows="5" cols="33" style="font-size: 17px"><div style="color: cornflowerblue;font-size: 22px">hello world</div></textarea></div></body></html>';
+  getElectronApi().fetchHTML();
 }
   
 function onMinimizeWindow(){
@@ -57,21 +73,15 @@ function onOpenDevTools(){
   utils.openDevTools();
 }
 
+async function getPrinters(){
+  log.info(await getElectronApi().getPrinters());
+}
 function onShowPrint(){
   getElectronApi().showPrintPreviewWindow();
 }
 // 直接打印测试
 function printTest(){
   getElectronApi().printTest();
-}
-
-function slientPrint(){
-  getElectronApi().slientPrint();
-}
-function getPrinterList(){
-  const printersList = getElectronApi().getPrinterList();
-  // 打印日志到文件
-  log.info(printersList);  
 }
 </script>
   

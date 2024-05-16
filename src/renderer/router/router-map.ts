@@ -26,7 +26,12 @@ const routeMap: Array<RouteRecordRaw> = [
     path: "/print",
     name: "print",
     component: () => import("@views/print/print.vue"),
-  }
+  },
+  {
+    path: "/slientPrint",
+    name: "slientPrint",
+    component: () => import("@views/print/slientPrint.vue"),
+  },
 ];
 
 export default routeMap;

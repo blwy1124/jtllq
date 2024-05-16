@@ -38,7 +38,8 @@ if(!gotLock && appState.onlyAllowSingleInstance){
       callback({
         responseHeaders: {
           ...details.responseHeaders,
-          "Content-Security-Policy": [ "script-src 'self' localhost:8098" ],
+          // "Content-Security-Policy": [ "script-src 'self' localhost:8098 39.99.237.1:9091" ],
+          "Content-Security-Policy": [ "default-src 'self'; frame-src https://www.baidu.com/; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:" ],
         },
       });
     });
