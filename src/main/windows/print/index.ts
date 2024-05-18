@@ -1,10 +1,9 @@
 import path from "path";
-import { BrowserWindow, ipcMain } from "electron";
+import { BrowserWindow, WebContentsPrintOptions, ipcMain } from "electron";
 import WindowBase from "../window-base";
 import appState from "../../app-state";
 import PrintPreviewWindow from "../printPreview";
-import SlientPrintWindow from "../slientPrint";
-const electronPrintPreview = require("electron-print-preview");
+import SilentPrintWindow from "../silentPrint";
 
 class PrintWindow extends WindowBase{
   constructor(){
@@ -74,16 +73,16 @@ class PrintWindow extends WindowBase{
       event.returnValue = list;
     });
 
-    ipcMain.on("slient-Print", (event) => {
+    ipcMain.on("silent-Print", (event) => {
       // 测试
-      if(!appState.slientPrintWindow?.valid){
-        appState.slientPrintWindow = new SlientPrintWindow();
+      if(!appState.silentPrintWindow?.valid){
+        const options: WebContentsPrintOptions = {};
+        appState.silentPrintWindow = new SilentPrintWindow("", options, false);
       }
-      const win = appState.slientPrintWindow?.browserWindow;
+      const win = appState.silentPrintWindow?.browserWindow;
       // 使用 electron-print-preview
-      // electronPrintPreview.setup(win);
       win?.webContents.openDevTools();
-      win?.show();
+      // win?.show();
     });
   }
 }

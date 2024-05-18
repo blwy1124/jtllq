@@ -8,7 +8,7 @@ import PrimaryWindow from "./windows/primary";
 import FramelessWindow from "./windows/frameless";
 import printWindow from "./windows/print";
 import printPreviewWindow from "./windows/printPreview";
-import slientPrintWindow from "./windows/slientPrint";
+import silentPrintWindow from "./windows/silentPrint";
 import log from "electron-log/main";
 import ElectronStore from "electron-store";
 import { Singleton } from "../lib/utils/shared";
@@ -82,7 +82,7 @@ class AppState extends Singleton{
     
     // 初始化Print打印组件
     print.initialize();
-    log.info("Utils initialize ok");
+    log.info("Print initialize ok");
 
     // 初始化Utils组件
     utils.initialize();
@@ -128,7 +128,7 @@ class AppState extends Singleton{
   // 打印窗口渲染的对象
   public printPreviewWindow : null | printPreviewWindow = null;
   // 静默打印的对象
-  public slientPrintWindow : null | slientPrintWindow = null;
+  public silentPrintWindow : null | silentPrintWindow = null;
   
   // 系统托盘
   public tray: null | Tray = null;

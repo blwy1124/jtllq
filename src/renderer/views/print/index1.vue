@@ -5,15 +5,22 @@
   <!-- 可以添加更多的 HTML 元素 -->  
 </template>
 <script lang="ts" setup>
+import { ipcRenderer } from "electron";
 import { onMounted } from "vue";
+function getElectronApi(){
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (window as any).silentWindowAPI;
+}
 onMounted(() => {
   let count = 0;
   let interval = setInterval(() => {
     appendNode(count++);
-    if(count > 10){
+    if(count > 5){
       clearInterval(interval);
+      getElectronApi().printSilentWindow();
+      getElectronApi().printSilentWindow();
     }
-  }, 1000);
+  }, 200);
   function appendNode(count){
     let node = document.createElement("p");
 

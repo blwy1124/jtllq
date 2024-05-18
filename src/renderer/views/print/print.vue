@@ -26,7 +26,7 @@
     <a-button @click="getPrinterList">
       获取打印机列表
     </a-button>
-    <a-button @click="slientPrint">
+    <a-button @click="silentPrint">
       静默打印
     </a-button>
   </div>
@@ -65,8 +65,8 @@ function printTest(){
   getElectronApi().printTest();
 }
 
-function slientPrint(){
-  getElectronApi().slientPrint();
+function silentPrint(){
+  getElectronApi().silentPrint();
 }
 function getPrinterList(){
   const printersList = getElectronApi().getPrinterList();

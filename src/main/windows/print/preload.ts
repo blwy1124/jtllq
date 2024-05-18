@@ -9,7 +9,7 @@ contextBridge.exposeInMainWorld("printWindowAPI", {
   closeWindow: () => ipcRenderer.send("close-window"),
   showPrintPreviewWindow: () => ipcRenderer.send("show-print-preview-window"),
   printTest: () => ipcRenderer.send("print-test"),
-  slientPrint: () => ipcRenderer.send("slient-Print"),
+  silentPrint: () => ipcRenderer.send("silent-Print"),
   getPrinterList: () => ipcRenderer.sendSync("get-printer-list"),
   
 });

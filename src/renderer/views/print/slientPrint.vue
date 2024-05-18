@@ -11,7 +11,7 @@ import { onMounted, ref } from "vue";
 const webviewUrl = ref("https://www.baidu.com");
 function getElectronApi(){
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (window as any).slientWindowAPI;
+  return (window as any).silentWindowAPI;
 }
 onMounted(() => {
   // 等待页面加载完成后再执行打印功能
@@ -24,7 +24,7 @@ const printWebview = () => {
 
   // 获取 webview 的 HTML 内容
   const htmlContent = webview.outerHTML;
-  getElectronApi().printSlientWindow(htmlContent);
+  getElectronApi().printSilentWindow(htmlContent);
 };
 
 
