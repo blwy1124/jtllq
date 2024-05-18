@@ -4,6 +4,7 @@ import WindowBase from "../window-base";
 import appState from "../../app-state";
 import PrintPreviewWindow from "../printPreview";
 import SlientPrintWindow from "../slientPrint";
+const electronPrintPreview = require("electron-print-preview");
 
 class PrintWindow extends WindowBase{
   constructor(){
@@ -79,6 +80,8 @@ class PrintWindow extends WindowBase{
         appState.slientPrintWindow = new SlientPrintWindow();
       }
       const win = appState.slientPrintWindow?.browserWindow;
+      // 使用 electron-print-preview
+      // electronPrintPreview.setup(win);
       win?.webContents.openDevTools();
       win?.show();
     });

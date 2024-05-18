@@ -1,15 +1,31 @@
 <template>
-  <!-- <div>
-    <iframe :src="url" width="100%" height="100%" />
-  </div>  -->
-  <webview id="foo" src="https://www.baidu.com" style="display:inline-flex; width:640px; height:480px" /> 
+  <div>
+    <webview ref="webview" :src="webviewUrl" style="width: 100%; height: 600px;" />
+  </div>
 </template>
 <script setup lang="ts">
-import Webview from "@views/webview.vue";
 import { webContents } from "electron";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 // 要加载的网页地址
-const url = ref("https://www.baidu.com");
+const webviewUrl = ref("https://www.baidu.com");
+function getElectronApi(){
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return (window as any).slientWindowAPI;
+}
+onMounted(() => {
+  // 等待页面加载完成后再执行打印功能
+  printWebview();
+});
+const printWebview = () => {
+  // 获取 webview 实例
+  const webview = document.querySelector("webview");
+  if(!webview) return;
+
+  // 获取 webview 的 HTML 内容
+  const htmlContent = webview.outerHTML;
+  getElectronApi().printSlientWindow(htmlContent);
+};
+
 
 </script>

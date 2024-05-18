@@ -39,7 +39,7 @@ if(!gotLock && appState.onlyAllowSingleInstance){
         responseHeaders: {
           ...details.responseHeaders,
           // "Content-Security-Policy": [ "script-src 'self' localhost:8098 39.99.237.1:9091" ],
-          "Content-Security-Policy": [ "default-src 'self'; frame-src https://www.baidu.com/; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:" ],
+          "Content-Security-Policy": [ "default-src 'self'; frame-src https://www.baidu.com/; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' http://localhost:8098; img-src 'self' data:" ],
         },
       });
     });
