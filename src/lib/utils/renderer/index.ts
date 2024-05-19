@@ -4,7 +4,7 @@
  * @file 当前目录的代码只能被渲染进程所使用
  */
 
-import { OpenDialogOptions, OpenDialogReturnValue } from "electron";
+import { BrowserWindow, OpenDialogOptions, OpenDialogReturnValue } from "electron";
 
 class Utils{
   public openDevTools(){

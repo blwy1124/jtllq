@@ -8,5 +8,6 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "cmake.configureOnOpen": true
+  "cmake.configureOnOpen": true,
+  "editor.fontSize": 20
 }

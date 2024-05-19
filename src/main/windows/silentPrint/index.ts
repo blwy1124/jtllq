@@ -12,13 +12,14 @@ class SilentPrintWindow extends WindowBase{
     super({
       width: 800,  
       height: 1000,  
-      show: false, // 可以先隐藏窗口，打印后再显示  
+      show: true, // 可以先隐藏窗口，打印后再显示  
       webPreferences: {  
         nodeIntegration: false, // 根据你的需求启用或禁用  
         contextIsolation: true, // 推荐启用  
         webviewTag: true, // 允许使用<webview>标签
         // 可以在这里添加 preload 脚本以安全地暴露 ipcRenderer API  
         preload: path.join(__dirname, "preload.js"),
+        webSecurity: false
       }
     });
     this.router = router;
@@ -46,12 +47,18 @@ class SilentPrintWindow extends WindowBase{
       }
     });
 
-    ipcMain.on("print-silent-window", (event) => {
+    ipcMain.on("print-silent-window", (event) => {  
       this.printWindow(event, this.options);
     });
   }
   private printWindow(event, options){
-    event.sender.print(options);
+    const parent = this.browserWindow?.getParentWindow();
+    event.sender.print(options, (success, failureReason) => {
+      parent?.webContents.send("print-result", { "result": success, "failureReason": failureReason });
+      // if(this.browserWindow){
+      //   this.browserWindow.destroy();
+      // }
+    });
   }
 }
 export default SilentPrintWindow;

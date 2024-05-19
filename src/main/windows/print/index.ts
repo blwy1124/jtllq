@@ -2,7 +2,6 @@ import path from "path";
 import { BrowserWindow, WebContentsPrintOptions, ipcMain } from "electron";
 import WindowBase from "../window-base";
 import appState from "../../app-state";
-import PrintPreviewWindow from "../printPreview";
 import SilentPrintWindow from "../silentPrint";
 
 class PrintWindow extends WindowBase{
@@ -40,26 +39,6 @@ class PrintWindow extends WindowBase{
       this.browserWindow?.close();
     });
 
-    ipcMain.on("show-print-preview-window", (event) => {
-      if(!appState.printPreviewWindow?.valid){
-        appState.printPreviewWindow = new PrintPreviewWindow();
-      }
-      
-      const win = appState.printPreviewWindow?.browserWindow;
-      if(win){
-        // 居中到父窗体中
-        const parent = win.getParentWindow();
-        if(parent){
-          const parentBounds = parent.getBounds();
-          const x = Math.round(parentBounds.x + (parentBounds.width - win.getSize()[0]) / 2);
-          const y = Math.round(parentBounds.y + (parentBounds.height - win.getSize()[1]) / 2);
-
-          win.setPosition(x, y, false);
-        }
-        win.show();
-      }
-    });
-
     ipcMain.on("print-test", (event) => {
       // 测试
       this.browserWindow?.webContents.print(
@@ -76,8 +55,8 @@ class PrintWindow extends WindowBase{
     ipcMain.on("silent-Print", (event) => {
       // 测试
       if(!appState.silentPrintWindow?.valid){
-        const options: WebContentsPrintOptions = {};
-        appState.silentPrintWindow = new SilentPrintWindow("", options, false);
+        const options: WebContentsPrintOptions = { silent: true, deviceName: "Microsoft Print to PDF" };
+        appState.silentPrintWindow = new SilentPrintWindow("/index1", options, false);
       }
       const win = appState.silentPrintWindow?.browserWindow;
       // 使用 electron-print-preview

@@ -148,6 +148,7 @@ class PrimaryWindow extends WindowBase{
           win.setPosition(x, y, false);
         }
         win.show();
+        win.webContents.openDevTools();
       }
     });
   }
