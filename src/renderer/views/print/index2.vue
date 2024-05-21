@@ -1,7 +1,7 @@
 <template>
   <!-- 这里是页面的可见内容 -->  
-  <h1>欢迎来到我的网页</h1>  
-  <p>这是一个段落。</p>  
+  <h1>欢迎来到我的网页2</h1>  
+  <p>这是一个段落2。</p>  
   <!-- 可以添加更多的 HTML 元素 -->  
 </template>
 <script lang="ts" setup>
@@ -17,13 +17,13 @@ onMounted(() => {
     appendNode(count++);
     if(count > 10){
       clearInterval(interval);
-      getElectronApi().printSilentWindow();
+      // getElectronApi().printSilentWindow();
     }
   }, 200);
   function appendNode(count){
     let node = document.createElement("p");
 
-    node.textContent = "打印 测试： + " + count;
+    node.textContent = "打印 测试2： + " + count;
     document.body.appendChild(node);
   }
 });

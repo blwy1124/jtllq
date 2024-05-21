@@ -211,7 +211,11 @@ getElectronApi().onShowExitAppMsgbox(() => {
 getElectronApi().onShowClosePrimaryWinMsgbox(() => {
   showClosePrimaryWinMsgbox.value = true;
 });
-
+// 打印返回结果
+getElectronApi().printRes((res:JSON) => {
+  console.log("primary:");
+  console.log(res);
+});
 // 打印日志到文件
 log.info("Log from the renderer process(App.vue)!");
 

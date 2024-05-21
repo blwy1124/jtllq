@@ -37,6 +37,11 @@ const routeMap: Array<RouteRecordRaw> = [
     name: "index1",
     component: () => import("@views/print/index1.vue"),
   },
+  {
+    path: "/index2",
+    name: "index2",
+    component: () => import("@views/print/index2.vue"),
+  },
 ];
 
 export default routeMap;

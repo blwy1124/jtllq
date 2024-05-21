@@ -5,5 +5,5 @@ import { WebContentsPrintOptions, contextBridge, ipcRenderer } from "electron";
 */
 contextBridge.exposeInMainWorld("silentWindowAPI", {
   printSilentWindow: () => ipcRenderer.send("print-silent-window"),
-
+  
 });

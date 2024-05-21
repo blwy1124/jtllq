@@ -56,7 +56,7 @@ class PrintWindow extends WindowBase{
       // 测试
       if(!appState.silentPrintWindow?.valid){
         const options: WebContentsPrintOptions = { silent: true, deviceName: "Microsoft Print to PDF" };
-        appState.silentPrintWindow = new SilentPrintWindow("/index1", options, false);
+        appState.silentPrintWindow = new SilentPrintWindow("/index1", options, true);
       }
       const win = appState.silentPrintWindow?.browserWindow;
       // 使用 electron-print-preview

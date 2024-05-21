@@ -2,7 +2,8 @@ import path from "path";
 import { BrowserWindow, WebContentsPrintOptions, ipcMain } from "electron";
 import WindowBase from "../window-base";
 import appState from "../../app-state";
-import print from "../../../lib/print/main";
+import print, { PrintUtil } from "../../../lib/print/main";
+import log from "electron-log/main";
 class SilentPrintWindow extends WindowBase{
   private router:string;
   private options:WebContentsPrintOptions;
@@ -31,7 +32,7 @@ class SilentPrintWindow extends WindowBase{
     // this.openNetworkRouter("http://39.99.237.1:9091/webhis/");
     console.log(this.router);
     this.openRouter(this.router);
-  }
+  } 
 
   protected registerIpcMainHandler(): void{ 
     this._browserWindow?.webContents.on("did-finish-load", (event) => {
@@ -47,18 +48,35 @@ class SilentPrintWindow extends WindowBase{
       }
     });
 
+    // 打印
     ipcMain.on("print-silent-window", (event) => {  
-      this.printWindow(event, this.options);
+      // const parent = this.browserWindow?.getParentWindow();
+      const win = BrowserWindow.fromWebContents(event.sender);
+      const parent = win?.getParentWindow();
+      console.log(parent);
+      // event.sender.send("print-result", "print-silent-window发来信息");
+      log.info("print-silent-window:" + parent?.webContents.getTitle());
+      parent?.webContents.send("print-result", { "result": true, "failureReason": "failureReason" });
+      this.browserWindow?.webContents.print(this.options, (success, failureReason) => {
+        if(this.browserWindow){
+          this.browserWindow?.close();
+        }
+      }); 
+    });
+    
+    ipcMain.on("closed", () => {
+      appState.silentPrintWindow = null;
     });
   }
   private printWindow(event, options){
     const parent = this.browserWindow?.getParentWindow();
+    console.log(parent);
     event.sender.print(options, (success, failureReason) => {
       parent?.webContents.send("print-result", { "result": success, "failureReason": failureReason });
-      // if(this.browserWindow){
-      //   this.browserWindow.destroy();
-      // }
-    });
+      if(this.browserWindow){
+        this.browserWindow?.close();
+      }
+    }); 
   }
 }
 export default SilentPrintWindow;

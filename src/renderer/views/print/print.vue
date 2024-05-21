@@ -74,11 +74,6 @@ function getPrinterList(){
   log.info(printersList);  
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-(window as any).printWindowAPI.printRes((res: JSON) => {
-  log.info(res);
-});
-
 </script>
   
   <style scoped>

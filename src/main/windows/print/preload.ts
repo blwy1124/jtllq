@@ -11,8 +11,5 @@ contextBridge.exposeInMainWorld("printWindowAPI", {
   printTest: () => ipcRenderer.send("print-test"),
   silentPrint: () => ipcRenderer.send("silent-Print"),
   getPrinterList: () => ipcRenderer.sendSync("get-printer-list"),
-  printRes: (callback) => ipcRenderer.on("print-result", (event, res) => {
-    callback(res);
-  }),
   
 });

@@ -22,5 +22,7 @@ contextBridge.exposeInMainWorld("primaryWindowAPI", {
   minToTray: () => ipcRenderer.send("min-to-tray"),
   httpGetRequest: (url:string) => ipcRenderer.send("http-get-request", url),
   showPrintWindow: () => ipcRenderer.send("show-print-Window"),
-
+  printRes: (callback) => ipcRenderer.on("print-result", (event, res) => {
+    callback(res);
+  }),
 });
