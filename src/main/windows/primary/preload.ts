@@ -25,4 +25,8 @@ contextBridge.exposeInMainWorld("primaryWindowAPI", {
   printRes: (callback) => ipcRenderer.on("print-result", (event, res) => {
     callback(res);
   }),
+  // printss: () => ipcRenderer.on("silent-print-end", (event, res) => {
+  //   console.log("ipcRenderer.silent-print-end=============");
+  //   ipcRenderer.invoke("electron-print-end", res);
+  // })
 });

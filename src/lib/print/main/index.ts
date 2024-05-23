@@ -7,6 +7,7 @@ import * as PrintUtil from "./print-util";
 import appState from "../../../main/app-state";
 import SilentPrintWindow from "../../../main/windows/silentPrint";
 import log from "electron-log/main";
+import { as } from "koffi";
 
 
 class Print{
@@ -39,12 +40,15 @@ const print = new Print();
  * } 
  *  @isHandle: true调用窗口函数print在打印，false:调用后即打印。不传默认直接打印
  */
-ipcMain.on("electron-print-open-print-window", (event, printType, printOptionArr) => {
+ipcMain.handle("electron-print-open-print-window", async(event, printType, printOptionArr) => {
   // 参数验证
   if(!printOptionArr || printOptionArr.length < 1){
     throw new Error("Invalid parameters: printOptionArr不能为空!");
   }
-  if(printType === "browser"){
+  if(!printType){
+    throw new Error("Invalid parameters: printType不能为空!");
+  }
+  if(printType == "" || printType === "browser"){
     if(printOptionArr.length === 1){
       const printOption = printOptionArr[0];
       const url = printOption["url"];
@@ -53,17 +57,25 @@ ipcMain.on("electron-print-open-print-window", (event, printType, printOptionArr
       }
       const options = printOption["options"];
       const isSecondaryCall = printOption["isSecondaryCall"];
-      appState.silentPrintWindow = new SilentPrintWindow(url, options, isSecondaryCall);
-      // log.info("electron-print-open-print-window:" + BrowserWindow.fromWebContents(event.sender)?.webContents.getTitle());
-      const win = appState.silentPrintWindow?.browserWindow;
+      // 创建窗口
+      const ss = new SilentPrintWindow(url, options, isSecondaryCall);
+      console.log("0.执行语句");
+      const win = ss.browserWindow;
+      // 设置父窗口
       win?.setParentWindow(BrowserWindow.fromWebContents(event.sender));
-      // log.info("electron-print-open-print-window2:" + BrowserWindow.fromWebContents(event.sender)?.webContents.getTitle());
+      // 等待打印完毕
+      const res = await startPrint(url, ss);
+      console.log("6.终于打印回来了");
+      win?.close();
+      win?.destroy();
+      console.log("7.关闭敞口");
+      return Promise.resolve(res);
     }else if(printOptionArr.length > 1){
       // 批量
-      batchPrint(printOptionArr);
+      // await batchPrint(null, {}, null);
     }
   }else if(printType === "fr3"){
-    console.log("还未开发");
+    event.returnValue = "还未开发";
   }
 });
 
@@ -73,12 +85,30 @@ ipcMain.handle("electron-print-get-printer-list", async(event) => {
   const list = await event.sender.getPrintersAsync();
   return list;
 });
-// 打印暂时没用
+// 直接打印暂时没用
 ipcMain.on("electron-print-silent-print-current-window", (event) => {
   event.sender.print();
 });
 // === FALG LINE (DO NOT MODIFY/REMOVE) ===
+// 加载地址
 
+const json = {};
+async function startPrint(url:string, silentPrintWindow?: SilentPrintWindow){
+  return new Promise((resolve, reject) => {
+    silentPrintWindow?.openRouter(url);
+    // ipcMain.removeHandler("electron-print-end");
+    json[silentPrintWindow?.browserWindow?.webContents.id || ""] = (event, res) => {
+      if(res){
+        console.log("===========" + url);
+        resolve(res);
+      }
+    };
+  });
+}
+
+ipcMain.handle("electron-print-end", async(event, res) => {
+  json[event.sender.id](event, res);
+});
 // 批量打印
 async function batchPrint(printOptionArr){
   let win;
@@ -94,64 +124,6 @@ async function batchPrint(printOptionArr){
   }
 }
 
-
-async function createSilentWindow(url, options, isSecondaryCall){
-  const printWindow = new BrowserWindow({
-    width: 800,  
-    height: 1000,  
-    show: true, // 可以先隐藏窗口，打印后再显示  
-    webPreferences: {  
-      nodeIntegration: false, // 根据你的需求启用或禁用  
-      contextIsolation: true, // 推荐启用  
-      webviewTag: true, // 允许使用<webview>标签
-      // 可以在这里添加 preload 脚本以安全地暴露 ipcRenderer API  
-      preload: path.join(__dirname, "preload.js"),
-      webSecurity: false
-    }
-  });
-  printWindow.loadURL("../../../renderer/views/print/index1.vue");
-
-
-  printWindow?.webContents.on("did-finish-load", (event) => {
-    //   this._browserWindow?.webContents.executeJavaScript(`
-    //   console.log('Hello from executeJavaScript!');
-    //   window.silentWindowAPI.printSilentWindow();
-    //   console.log('Hello from 已执行!1111');
-    // `);
-    event.sender.openDevTools();
-    if(!isSecondaryCall){
-      try {
-        // 执行打印操作
-        event.sender.print(options, (success, failureReason) => {
-          if(!success){
-            console.error(`Print failed: ${failureReason}`);
-          }else{
-            console.log("打印成功！");
-          }
-        });
-      } catch (error){
-        // console.error(`Print error: ${error.message}`);
-      }
-    }
-  });
-
-  // 监听渲染进程发出的打印请求
-  ipcMain.on("print-silent-window-print1", async(event) => {
-    try {
-    // 执行打印操作
-      await event.sender.print(options, (success, failureReason) => {
-        if(!success){
-          console.error(`Print failed: ${failureReason}`);
-        }else{
-          console.log("打印成功！");
-        }
-      });
-    } catch (error){
-      // console.error(`Print error: ${error.message}`);
-    }
-  }
-  );
-}
 
 export default print;
 export {

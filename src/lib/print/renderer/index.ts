@@ -13,6 +13,9 @@ class Print{
   public async getPrinterList() : Promise<PrinterInfo>{
     return await (window as any).__ElectronPrintUtils__.getPrinterList() as PrinterInfo;
   }
+  public printHandle(){
+    return (window as any).__ElectronPrintUtils__.printHandle();
+  }
 }
   
 const print = new Print();

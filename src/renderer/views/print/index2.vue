@@ -17,7 +17,7 @@ onMounted(() => {
     appendNode(count++);
     if(count > 10){
       clearInterval(interval);
-      // getElectronApi().printSilentWindow();
+      getElectronApi().printSilentWindow();
     }
   }, 200);
   function appendNode(count){
