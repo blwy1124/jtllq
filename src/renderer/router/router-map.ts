@@ -28,11 +28,6 @@ const routeMap: Array<RouteRecordRaw> = [
     component: () => import("@views/print/print.vue"),
   },
   {
-    path: "/silentPrint",
-    name: "silentPrint",
-    component: () => import("@views/print/silentPrint.vue"),
-  },
-  {
     path: "/index1",
     name: "index1",
     component: () => import("@views/print/index1.vue"),

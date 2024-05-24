@@ -1,17 +1,15 @@
 import path from "path";
 import { BrowserWindow, WebContentsPrintOptions, ipcMain, ipcRenderer } from "electron";
 import WindowBase from "../window-base";
-import appState from "../../app-state";
-import print, { PrintUtil } from "../../../lib/print/main";
 import log from "electron-log/main";
+import appState from "../../app-state";
 
 const json = {};
-
 class SilentPrintWindow extends WindowBase{
   private router:string;
   private options:WebContentsPrintOptions;
-  private isHandle:boolean = false;
-  constructor(router : string, options: WebContentsPrintOptions, isHandle: boolean){
+  private isSecondaryCall:boolean = false;
+  constructor(router : string, options: WebContentsPrintOptions, isSecondaryCall: boolean){
     // 调用WindowBase构造函数创建窗口
     super({
       width: 800,  
@@ -28,7 +26,7 @@ class SilentPrintWindow extends WindowBase{
     });
     this.router = router;
     this.options = options;
-    this.isHandle = isHandle;
+    this.isSecondaryCall = isSecondaryCall;
    
     json[this.browserWindow?.webContents.id || ""] = async(event) => {
       const win = BrowserWindow.fromWebContents(event.sender);
@@ -47,25 +45,16 @@ class SilentPrintWindow extends WindowBase{
   protected registerIpcMainHandler(): void{ 
     this._browserWindow?.webContents.on("did-finish-load", (event) => {
       console.log("1.did-finish-load:页面加载完成!");
-      if(!this.isHandle){
+      if(!this.isSecondaryCall){
+        event.sender.executeJavaScript("window.silentWindowAPI.printSilentWindow();");
         // this.printWindow(event, this.options);
       }
     });
     
     ipcMain.on("closed", () => {
-      // appState.silentPrintWindow = null;
+      appState.silentPrintWindow = null;
     });
   }
-  
-  // private printWindow(event, options){
-  //   const win = BrowserWindow.fromWebContents(event.sender);
-  //   const parent = win?.getParentWindow();
-  //   log.info("2.打印前的通信监听print-silent-window:" + parent?.webContents.getTitle());
-  //   event.sender.print(options, (success, failureReason) => {
-  //     log.info("3.准备开始打印!" + success);
-  //     event.sender.send("silent-print-end", { "result": success, "failureReason": failureReason });
-  //   }); 
-  // }
 }
 // 打印
 ipcMain.handle("print-silent-window", async(event) => {  
